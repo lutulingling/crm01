@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <!--注册中央调度器-->
+    <servlet>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <!-- SpringMVC前端调度器，所有的springmvc请求都会被拦截到DispatcherServlet中、再映射到具体的action里面、再解析action返回的结果 -->
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <!-- 初始化上下文配置文件路径、如果此处不配置那么SpringMVC会自动去找项目路径下面的 xxx-servlet.xml的配置文件(如本web.xml的话以为servlet-name
+            是springmvc那么会自动加载springmvc-servlet.xml)-->
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:conf/dispatcherServlet.xml</param-value>
+        </init-param>
+        <!--设置这一项是当系统启动时自动加载并初始化DispatcherServlet（分发servlet，总的控制中心），以及映射bean（为DispatcherServlet具体分送到哪一个action或者controller所配置的映射bean）。如果不设置则在第一次请求
+        是初始化，这样第一次请求比较慢，所以推崇第一种方式-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+
+    <!--指定Spring自定义的配置文件-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:conf/applicationContext.xml</param-value>
+    </context-param>
+    <!--注册监听器-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- 配置解决乱码问题 -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+</web-app>
