@@ -1,27 +1,22 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-        http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-4.3.xsd
-        http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-        http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd ">
+        http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!-- 注解扫描 -->
-    <context:component-scan base-package="com.lyk.crm"></context:component-scan>
-    <!-- mvc注解扫描-->
-    <mvc:annotation-driven />
+    <!-- spring的配置文件 -->
+    <!-- 声明组件扫描器，使用@Service创建Service对象 -->
+    <context:component-scan base-package="com.lyk.crm.settings.service.impl" />
 
-    <!-- 配置数据源 c3p0 -->
-    <!--这第一句话的意思是引用你的jdbc.properties文件 如果你不想引用外边的properties文件 可以把下边的数据写死 -->
-    <context:property-placeholder location="classpath:conf/jdbc.properties" />
+
+    <!-- 指定属性配置文件的位置 -->
+    <context:property-placeholder location="classpath:conf/jdbc.properties"/>
+
+    <!-- 声明数据源DataSource -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
           init-method="init" destroy-method="close">
         <property name="url" value="${jdbc.url}" />
@@ -29,18 +24,17 @@
         <property name="password" value="${jdbc.password}" />
     </bean>
 
-    <!-- 配置sqlsessionfactory -->
-    <bean id="sqlsessionfactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"></property>
-        <!-- 这句代码的意思找到你配置的mybatis-congif.xml 中配置的bean的别名-->
-        <property name="configLocation" value="classpath:conf/mybatis-config.xml"></property>
+    <!-- 声明SqlSessionFactoryBean，创建SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:conf/mybatis-config.xml" />
     </bean>
 
-    <!-- 扫描mapper -->
+
+    <!-- 声明MyBatis的扫描器：创建Dao对象 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.lyk.crm.settings.dao"></property>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="basePackage" value="com.lyk.crm" />
     </bean>
-
-
 
 </beans>

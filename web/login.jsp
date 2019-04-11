@@ -18,8 +18,8 @@
 			}
 
 			$("")
-			$("#userName").val("");
-			$("#Password").val("");
+			$("#loaginAct").val("");
+			$("#loginPwd").val("");
 
 			$("#loginSubmit").click(function () {
 				login();
@@ -33,21 +33,25 @@
 		})
 		
 		function login() {
-			var userName = $("#userName").val();
-			var passWord = $("#Password").val();
-			if (userName=="" || passWord==""){
+			var loginAct = $("#loginAct").val();
+			var loginPwd = $("#loginPwd").val();
+			if (loginAct =="" || loginPwd==""){
 				$("#msg").html("用户名或密码不能为空");
 				return false;
 			}
 			$.ajax({
-				url:"",
+				url:"setting/user/login.do",
 				data:{
-					"userName":userName,
-					"passWord":passWord
+					"loginAct":loginAct,
+					"loginPwd":loginPwd
 				},
 				dataType:"json",
-				success:function () {
-					
+				success:function (jsonObject) {
+					if (jsonObject.msg =="OK"){
+						window.location.href ="workbench/index.jap";
+					}else{
+						$("#msg").html(jsonObject.msg);
+					}
 				}
 
 			})
@@ -74,10 +78,10 @@
 			<form action="workbench/index.html" class="form-horizontal" role="form">
 				<div class="form-group form-group-lg">
 					<div style="width: 350px;">
-						<input class="form-control" type="text" placeholder="用户名" id="userName">
+						<input class="form-control" type="text" placeholder="用户名" id="loginAct">
 					</div>
 					<div style="width: 350px; position: relative;top: 20px;">
-						<input class="form-control" type="password" placeholder="密码" id="Password">
+						<input class="form-control" type="password" placeholder="密码" id="loginPwd">
 					</div>
 					<div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
 						

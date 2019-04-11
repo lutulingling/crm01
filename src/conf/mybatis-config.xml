@@ -7,4 +7,8 @@
         <package name="com.lyk.crm.settings.domain" />
 
     </typeAliases>
+
+    <mappers>
+        <package name="com.lyk.crm.settings.dao" />
+    </mappers>
 </configuration>
